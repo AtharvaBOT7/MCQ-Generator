@@ -1,5 +1,5 @@
-OpenAI package 
-LangChain package 
-StreamLit 
+openAI
+langchain
+streamLit 
 python-dotenv
 PyPDF2
