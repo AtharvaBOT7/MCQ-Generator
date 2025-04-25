@@ -1,5 +1,5 @@
 MCQ,Choices,Correct
-What is the primary objective of machine learning?,A : To create new data | B : To learn from data and generalize to unseen data | C : To replace human intelligence | D : To store large amounts of data,B
-Which of the following fields is NOT mentioned as an application of machine learning?,A : Natural language processing | B : Computer vision | C : Space exploration | D : Medicine,C
 Who coined the term 'machine learning' in 1959?,A : Alan Turing | B : Arthur Samuel | C : Donald Hebb | D : Geoffrey Hinton,B
-What is the relationship between machine learning and data mining?,"A : Machine learning is a subset of data mining | B : Data mining focuses on prediction, while machine learning focuses on discovery | C : Both employ similar methods but have different goals | D : They are completely unrelated fields",C
+Which of the following is NOT mentioned as an application of machine learning in the text?,A : Speech recognition | B : Agriculture | C : Weather forecasting | D : Email filtering,C
+What is the main difference between machine learning and data mining as described in the text?,A : Machine learning focuses on prediction; data mining focuses on discovering unknown properties. | B : Machine learning only uses supervised learning; data mining only uses unsupervised learning. | C : Data mining is a type of neural network; machine learning is not. | D : Machine learning does not use statistics; data mining does.,A
+"How is k-means clustering used in data compression, according to the text?",A : By encrypting data points | B : By grouping similar data points into clusters and representing them by centroids | C : By removing all redundant data | D : By converting data into text format,B
