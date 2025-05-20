@@ -79,15 +79,29 @@ llm = ChatOpenAI(openai_api_key=key, model="gpt-4o", temperature=0.5)
 # Prompt template for quiz generation
 TEMPLATE = """ 
 Text: {text}
-You are an expert MCQ Generator. Given the above text, your task is to \
-generate a quiz of {number} multiple choice questions in {tone} tone.
-These multiple choice questions will be used by the professor to test the students, so generate difficult questions.
-You have to make sure that the questions are not repeated and that all the questions align with the given text.
-You also have to make sure that you format your response as per the RESPONSE_JSON below and use it as a guide to generate the questions.
+
+You are an expert MCQ Generator. Given the above text, your task is to generate a quiz of {number} multiple choice questions in a {tone} tone for the subject {subject}.
+
+These multiple choice questions will be used by a professor to assess students, so ensure that they are:
+- non-repetitive,
+- relevant to the input text,
+- challenging enough for academic evaluation,
+- and aligned with the cognitive level of the students.
+
+You must strictly follow the RESPONSE_JSON format provided below and only return the JSON object.
 
 ### RESPONSE_JSON
 {response_json}
+
+⚠️ Important Instructions:
+- ❌ DO NOT include explanations, notes, or introductory text.
+- ❌ DO NOT wrap the response in markdown formatting like ```json ... ```.
+- ✅ ONLY return a single, valid JSON object that matches the structure exactly.
+- ✅ Ensure all keys, braces, and quotes are properly closed and escaped.
+
+Begin your response now:
 """
+
 
 quiz_generation_prompt = PromptTemplate(
     input_variables=["text", "number", "subject", "tone", "response_json"],

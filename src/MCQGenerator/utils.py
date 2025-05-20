@@ -1,51 +1,3 @@
-# import os
-# import json
-# import PyPDF2
-# import traceback
-
-# def read_file(file):
-#     if file.name.endswith(".pdf"):
-#         try:
-#             pdf_reader = PyPDF2.PdfFileReader(file)
-#             text = " "
-#             for page in pdf_reader.pages:
-#                 text += page.extract_text()
-            
-#             return text
-        
-#         except Exception as e:
-#             raise Exception(f"Error while reading the PDF File!")
-    
-#     elif file.name.endswith(".txt"):
-#         return file.read().decode("utf-8")
-
-#     else:
-#         raise Exception(
-#             f"Unsupported file format only pdf and text file supported"
-#         )
-    
-# def get_table_data(quiz_str):
-#     try:
-#         quiz_dict = json.loads(quiz_str)
-#         quiz_table_data = []
-
-#         for key, value in quiz_dict.items():
-#             mcq = value["MCQ"]
-#             options = " || ".join(
-#                 [
-#                     f"{option} -> {option_value}" for option, option_value in value["Options"].items()
-#                 ]
-#             )
-
-#             correct = value["Correct Answer"]
-#             quiz_table_data.append({"MCQ" : mcq, "Choices": options, "Correct Answer": correct})
-        
-#         return quiz_table_data
-    
-#     except Exception as e:
-#         traceback.print_exception(type(e), e, e.__traceback__)
-#         return False
-
 import os
 import json
 import traceback
@@ -83,46 +35,40 @@ def read_file(file):
         raise Exception("Unsupported file format. Only PDF and TXT files are supported.")
 
 
-import json
-import traceback
-import re
-
-import json
-import traceback
-import re
-
-import json
-import traceback
-import re
-
 def get_table_data(quiz_str):
     """
     Converts a JSON-like string from GPT output into a structured table.
-    Handles markdown code blocks, stray text, and invalid escapes.
+    Handles markdown wrapping, escape errors, truncation, and extra text.
     """
     try:
         if not quiz_str or not isinstance(quiz_str, str):
             raise ValueError("Empty or non-string quiz content received.")
 
-        # 1. Try to extract from ```json ... ``` block
-        match = re.search(r"```json\s*(\{.*\})\s*```", quiz_str, re.DOTALL)
+        # Extract JSON block
+        match = re.search(r"```json\s*(\{.*?\})\s*```", quiz_str, re.DOTALL)
         if match:
             quiz_str = match.group(1).strip()
         else:
-            # 2. Fallback: extract the first {...} block
-            brace_match = re.search(r"(\{.*\})", quiz_str, re.DOTALL)
+            brace_match = re.search(r"(\{.*)", quiz_str, re.DOTALL)  # Match from first {
             if brace_match:
                 quiz_str = brace_match.group(1).strip()
             else:
-                raise ValueError("Quiz string does not contain any JSON block.")
+                raise ValueError("No JSON block found in response.")
 
-        # 3. Sanitize invalid escape sequences
+        # Sanitize invalid escapes
         quiz_str = re.sub(r'\\(?!["\\/bfnrtu])', r'\\\\', quiz_str)
 
-        # 4. Parse JSON
-        quiz_dict = json.loads(quiz_str)
-        quiz_table_data = []
+        # Attempt to balance curly braces if cut-off happened
+        open_braces = quiz_str.count('{')
+        close_braces = quiz_str.count('}')
+        if open_braces > close_braces:
+            quiz_str += '}' * (open_braces - close_braces)
 
+        # Parse only first JSON object
+        decoder = json.JSONDecoder()
+        quiz_dict, _ = decoder.raw_decode(quiz_str)
+
+        quiz_table_data = []
         for key, value in quiz_dict.items():
             mcq = value.get("MCQ", "N/A")
             options_dict = value.get("Options", {})
@@ -144,4 +90,3 @@ def get_table_data(quiz_str):
         print("❌ Failed to parse quiz_str as JSON.\n\nRaw string:\n", quiz_str)
         traceback.print_exception(type(e), e, e.__traceback__)
         return False
-
