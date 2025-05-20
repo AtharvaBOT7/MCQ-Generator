@@ -1,0 +1,12 @@
+{
+    "1": {
+        "MCQ" : "Mulitple Choice Question",
+        "Options" : {
+            "A" : "First Choice",
+            "B" : "Second Choice",
+            "C" : "Third Choice",
+            "D" : "Fourth Choice"
+        }, 
+        "Correct Answer" : "Correct Answer"
+    }
+}
